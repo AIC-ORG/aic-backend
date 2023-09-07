@@ -1,0 +1,90 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+enum Role {
+    ARTIST
+    ADMIN
+    USER
+
+    @@map("roles")
+}
+
+enum VerificationStatus {
+    VERIFIED
+    PENDING
+    UNVERIFIED
+
+    @@map("verification_status")
+}
+
+enum PasswordResetStatus {
+    PENDING
+    IDLE
+
+    @@map("password_reset_status")
+}
+
+model User {
+    id                   String              @id @default(uuid())
+    names                String
+    email                String              @unique
+    telephone            String?
+    password             String
+    profile              String?             @default("https://res.cloudinary.com/djxhcwowp/image/upload/v1623778853/avatars/avatar-1_ozxjxh.png")
+    role                 Role                @default(USER)
+    verificationStatus   VerificationStatus  @default(UNVERIFIED) @map("verification_status")
+    verificationCode     String?
+    verificationExpires  DateTime?
+    passwordResetStatus  PasswordResetStatus @default(IDLE) @map("password_reset_status")
+    passwordResetCode    String?
+    passwordResetExpires DateTime?
+    createdAt            DateTime            @default(now()) @map("created_at")
+    updatedAt            DateTime            @updatedAt @map("updated_at")
+    myStreams            Stream[]            @relation("CreatedBy")
+
+    Stream   Stream? @relation("Attendees", fields: [streamId], references: [id])
+    streamId String?
+
+    @@map("users")
+}
+
+model Stream {
+    id          String @id @default(uuid())
+    roomId      String @unique @map("room_id")
+    createdBy   User   @relation("CreatedBy", fields: [createdById], references: [id])
+    createdById String @map("created_by")
+
+    attendees User[] @relation("Attendees")
+
+    title     String
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+}
+
+model Contact {
+    id        String   @id @default(uuid())
+    names     String
+    email     String
+    telephone String
+    message   String
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+
+    @@map("contacts")
+}
+
+model Faq {
+    id        String   @id @default(uuid())
+    question  String
+    answer    String?
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+
+    @@map("faqs")
+}

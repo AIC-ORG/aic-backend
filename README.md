@@ -73,7 +73,7 @@ yarn start:dev
 
 ## 🎈 Usage <a name="usage"></a>
 
-To use the system you will acess the live deployment online using this [link](https://frikamart-frontend.vercel.app/) or you can run the project on your local machine by following the steps above.
+To use the system you will acess the live deployment online using this [link](https://aic-frontend.vercel.app/) or you can run the project on your local machine by following the steps above.
 
 ## 🚀 Deployment <a name = "deployment"></a>
 
