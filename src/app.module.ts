@@ -10,7 +10,7 @@ import { HealthModule } from './modules/health/health.module';
 import { UserModule } from './modules/user/user.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { WebsocketGateway } from './websocket/websocket.gateway';
-import { ChatController } from './chat/chat.controller';
+import { StreamModule } from './modules/stream/stream.module';
 
 @Module({
   imports: [
@@ -28,11 +28,9 @@ import { ChatController } from './chat/chat.controller';
     MailModule,
     UserModule,
     AuthModule,
+    StreamModule,
     ContactModule,
-    FaqModule,
-    WebsocketGateway
-  ],
-  controllers: [ChatController],
-  providers: [WebsocketGateway],
+    FaqModule
+  ]
 })
 export class AppModule { }

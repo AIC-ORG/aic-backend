@@ -30,6 +30,14 @@ enum PasswordResetStatus {
     @@map("password_reset_status")
 }
 
+enum StreamStatus {
+    LIVE
+    PENDING
+    ENDED
+
+    @@map("stream_status")
+}
+
 model User {
     id                   String              @id @default(uuid())
     names                String
@@ -55,16 +63,15 @@ model User {
 }
 
 model Stream {
-    id          String @id @default(uuid())
-    roomId      String @unique @map("room_id")
-    createdBy   User   @relation("CreatedBy", fields: [createdById], references: [id])
-    createdById String @map("created_by")
-
-    attendees User[] @relation("Attendees")
-
-    title     String
-    createdAt DateTime @default(now()) @map("created_at")
-    updatedAt DateTime @updatedAt @map("updated_at")
+    id          String       @id @default(uuid())
+    roomId      String       @unique @map("room_id")
+    title       String
+    createdBy   User         @relation("CreatedBy", fields: [createdById], references: [id])
+    createdById String       @map("created_by")
+    attendees   User[]       @relation("Attendees")
+    status      StreamStatus @default(PENDING)
+    createdAt   DateTime     @default(now()) @map("created_at")
+    updatedAt   DateTime     @updatedAt @map("updated_at")
 }
 
 model Contact {

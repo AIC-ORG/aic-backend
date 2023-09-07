@@ -21,6 +21,7 @@ async function bootstrap() {
     .addBearerAuth()
     .addTag('auth')
     .addTag('users')
+    .addTag('streams')
     .addTag("faqs")
     .addTag("contacts")
     .addTag("health")
