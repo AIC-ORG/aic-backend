@@ -1,11 +1,13 @@
 const whitelist = [
     "http://localhost:3000",
+    "http://localhost:5173",
     "https://aic-frontend.vercel.app",
     "https://aic-backend.onrender.com",
     "https://aic.com",
 ];
 const options = {
     origin: (origin: string, callback: Function) => {
+        console.log(origin)
         if (whitelist.indexOf(origin) !== -1) {
             callback(null, true);
         } else {

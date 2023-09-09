@@ -35,5 +35,16 @@ export class StreamService {
         return stream;
 
     }
-    
+
+    async getLiveStreams(page: number, limit: number) {
+        return this.prisma.stream.findMany({
+            skip: page * limit,
+            take: Number(limit),
+            include: {
+                createdBy: true,
+                attendees: true
+            }
+        })
+    }
+
 }

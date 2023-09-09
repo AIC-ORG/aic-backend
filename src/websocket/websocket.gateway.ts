@@ -64,4 +64,23 @@ export class WebsocketGateway {
     this.server.to(payload.room).emit('new_user_joined', `${user.names} has joined the room`);
 
   }
+
+
+  @SubscribeMessage('offer')
+  async handleOffer(@MessageBody() data) {
+    // Handle offer and send it to the desired recipient
+    this.server.to(data.target).emit('offer', data.offer);
+  }
+
+  @SubscribeMessage('answer')
+  async handleAnswer(@MessageBody() data) {
+    // Handle answer and send it to the desired recipient
+    this.server.to(data.target).emit('answer', data.answer);
+  }
+
+  @SubscribeMessage('ice-candidate')
+  async handleIceCandidate(@MessageBody() data) {
+    // Handle ICE candidate and send it to the desired recipient
+    this.server.to(data.target).emit('ice-candidate', data.candidate);
+  }
 }
