@@ -112,10 +112,8 @@ export class UserService {
         return users
     }
 
-    async findAll(page: number, limit: number, status?: 'VERIFIED' | 'UNVERIFIED' | 'PENDING') {
-        const condition = status ? { verificationStatus: status } : {};
+    async findAll(page: number, limit: number) {
         const users = await this.prisma.user.findMany({
-            where: condition,
             take: Number(limit),
             skip: page * limit,
             orderBy: {

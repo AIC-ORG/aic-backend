@@ -24,11 +24,11 @@ export class WebsocketGateway {
     this.server.to(payload.room).emit('new_message', payload.message);
   }
 
-  @SubscribeMessage('join_room')
-  async handleJoinRoom(
-    @ConnectedSocket() client: Socket,
+  @SubscribeMessage('initiate_stream')
+  async handleInitiateStream(
+    @ConnectedSocket() socket: Socket,
     @MessageBody() { room, userId }) {
-    console.log(room, userId)
+    socket.join(room)
     await this.prisma.stream.update({
       where:
       {
@@ -39,18 +39,22 @@ export class WebsocketGateway {
           connect: {
             id: userId
           }
-        }
-      }
+        },
+        status: "LIVE"
+      },
+
     })
 
-    const user = await this.prisma.user.findUnique({
-      where: {
-        id: userId
-      }
-    })
+    this.server.to(room).emit('stream_started');
 
-    this.server.to(room).emit('new_user_joined', `${user.names} has joined the room`);
+  }
 
+  @SubscribeMessage('join-room')
+  async handleJoinRoom(
+    @ConnectedSocket() socket: Socket,
+    @MessageBody() { room, peerId }) {
+    socket.join(room)
+    this.server.to(room).emit('user-connected', peerId);
   }
 
   @SubscribeMessage('leave_room')
@@ -65,22 +69,4 @@ export class WebsocketGateway {
 
   }
 
-
-  @SubscribeMessage('offer')
-  async handleOffer(@MessageBody() data) {
-    // Handle offer and send it to the desired recipient
-    this.server.to(data.target).emit('offer', data.offer);
-  }
-
-  @SubscribeMessage('answer')
-  async handleAnswer(@MessageBody() data) {
-    // Handle answer and send it to the desired recipient
-    this.server.to(data.target).emit('answer', data.answer);
-  }
-
-  @SubscribeMessage('ice-candidate')
-  async handleIceCandidate(@MessageBody() data) {
-    // Handle ICE candidate and send it to the desired recipient
-    this.server.to(data.target).emit('ice-candidate', data.candidate);
-  }
 }

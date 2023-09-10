@@ -55,16 +55,14 @@ export class UserController {
     }
 
     @Get("all")
-    @UseGuards(AdminGuard)
+    // @UseGuards(AdminGuard)
     @ApiQuery({ name: "page", required: false, example: 0 })
     @ApiQuery({ name: "limit", required: false, example: 5 })
-    @ApiParam({ name: "status", required: false })
     async all(
         @Query("page") page: number = 0,
         @Query("limit") limit: number = 5,
-        @Param("status") status?: "VERIFIED" | "UNVERIFIED" | "PENDING"
     ) {
-        const users = await this.userService.findAll(page, limit, status);
+        const users = await this.userService.findAll(page, limit);
         return ServerResponse.success("Users fetched successfully", { users })
     }
 

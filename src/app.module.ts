@@ -11,6 +11,7 @@ import { UserModule } from './modules/user/user.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { WebsocketGateway } from './websocket/websocket.gateway';
 import { StreamModule } from './modules/stream/stream.module';
+import { ArtistModule } from './modules/artist/artist.module';
 
 @Module({
   imports: [
@@ -26,8 +27,9 @@ import { StreamModule } from './modules/stream/stream.module';
     PrismaModule,
     HealthModule,
     MailModule,
-    UserModule,
     AuthModule,
+    UserModule,
+    ArtistModule,
     StreamModule,
     ContactModule,
     FaqModule

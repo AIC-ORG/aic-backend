@@ -56,10 +56,47 @@ model User {
     updatedAt            DateTime            @updatedAt @map("updated_at")
     myStreams            Stream[]            @relation("CreatedBy")
 
-    Stream   Stream? @relation("Attendees", fields: [streamId], references: [id])
-    streamId String?
+    currentStream Stream? @relation("Attendees", fields: [streamId], references: [id])
+    streamId      String?
+
+    songs  Song[]
+    stores Store[]
 
     @@map("users")
+}
+
+model Song {
+    id          String   @id @default(uuid())
+    title       String
+    artist      User     @relation(fields: [artistId], references: [id])
+    artistId    String   @map("artist_id")
+    url         String
+    description String?
+    createdAt   DateTime @default(now()) @map("created_at")
+    updatedAt   DateTime @updatedAt @map("updated_at")
+}
+
+model Store {
+    id          String    @id @default(uuid())
+    name        String
+    description String?
+    logo        String?
+    artist      User      @relation(fields: [artistId], references: [id])
+    artistId    String    @map("artist_id")
+    createdAt   DateTime  @default(now()) @map("created_at")
+    updatedAt   DateTime  @updatedAt @map("updated_at")
+    products     Product[]
+}
+
+model Product {
+    id          String   @id @default(uuid())
+    name        String
+    description String?
+    price       Float
+    store       Store    @relation(fields: [storeId], references: [id])
+    storeId     String   @map("store_id")
+    createdAt   DateTime @default(now()) @map("created_at")
+    updatedAt   DateTime @updatedAt @map("updated_at")
 }
 
 model Stream {
