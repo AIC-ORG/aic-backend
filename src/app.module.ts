@@ -12,6 +12,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { WebsocketGateway } from './websocket/websocket.gateway';
 import { StreamModule } from './modules/stream/stream.module';
 import { ArtistModule } from './modules/artist/artist.module';
+import { StoreModule } from './modules/store/store.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { ArtistModule } from './modules/artist/artist.module';
     AuthModule,
     UserModule,
     ArtistModule,
+    StoreModule,
     StreamModule,
     ContactModule,
     FaqModule

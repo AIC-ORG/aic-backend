@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { AddSongDTO } from './add-song.dto';
+import { AddSongDTO } from './dto/add-song.dto';
 import { connect } from 'http2';
 
 @Injectable()

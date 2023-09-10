@@ -1,12 +1,13 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query, Req } from '@nestjs/common';
-import { ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
-import { ArtistService } from './artist.service';
-import ServerResponse from 'src/utils/ServerResponse';
-import { AddSongDTO } from './add-song.dto';
+import { ApiBearerAuth, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { AuthRequest } from 'src/types';
+import ServerResponse from 'src/utils/ServerResponse';
+import { ArtistService } from './artist.service';
+import { AddSongDTO } from './dto/add-song.dto';
 
 @Controller('artist')
 @ApiTags("artists")
+@ApiBearerAuth()
 export class ArtistController {
 
     constructor(
