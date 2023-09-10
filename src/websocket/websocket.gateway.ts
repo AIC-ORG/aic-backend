@@ -2,7 +2,7 @@ import { ConnectedSocket, MessageBody, SubscribeMessage, WebSocketGateway, WebSo
 import { Server, Socket } from 'socket.io';
 import { PrismaService } from 'src/prisma/prisma.service';
 
-@WebSocketGateway()
+@WebSocketGateway(5002)
 export class WebsocketGateway {
 
   constructor(
@@ -20,8 +20,12 @@ export class WebsocketGateway {
   }
 
   @SubscribeMessage('message')
-  handleMessage(_: any, payload: { room: string, message: string }) {
-    this.server.to(payload.room).emit('new_message', payload.message);
+  handleMessage(
+    @ConnectedSocket() socket: Socket,
+    @MessageBody() { room, message }) {
+    console.log(room, message)
+    socket.join(room)
+    this.server.to(room).emit('new_message', message);
   }
 
   @SubscribeMessage('initiate_stream')
@@ -57,8 +61,24 @@ export class WebsocketGateway {
     this.server.to(room).emit('user-connected', peerId);
   }
 
+  @SubscribeMessage('join_chat_room')
+  async handleJoinChatRoom(
+    @ConnectedSocket() socket: Socket,
+    @MessageBody() { roomId, userId }) {
+    socket.join(roomId)
+    console.log(roomId, userId)
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id: userId
+      }
+    })
+    this.server.to(roomId).emit('user_joined_chat', user.names);
+  }
+
   @SubscribeMessage('leave_room')
-  async handleLeaveRoom(_: any, payload: { room: string, userId: string }) {
+  async handleLeaveRoom(
+    @ConnectedSocket() socket: Socket, payload: { room: string, userId: string }) {
+    socket.leave(payload.room)
     const user = await this.prisma.user.findUnique({
       where: {
         id: payload.userId
@@ -66,7 +86,6 @@ export class WebsocketGateway {
     })
 
     this.server.to(payload.room).emit('new_user_joined', `${user.names} has joined the room`);
-
   }
 
 }
