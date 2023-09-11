@@ -15,6 +15,7 @@ export class StreamService {
             data: {
                 roomId: Math.floor(100000 + Math.random() * 900000).toString(),
                 title: dto.title,
+                description:dto.description,
                 createdBy: {
                     connect: {
                         id: artistId
