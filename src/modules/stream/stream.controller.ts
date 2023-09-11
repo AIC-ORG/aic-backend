@@ -40,7 +40,6 @@ export class StreamController {
     }
 
     @Get(':roomId')
-    @UseGuards(AuthGuard)
     @ApiParam({ name: "roomId", required: true, example: 648240, type: Number })
     async getStreamByCode(
         @Param("roomId") roomId: number = 0,
