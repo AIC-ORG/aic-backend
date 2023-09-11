@@ -105,6 +105,7 @@ model Stream {
     id          String       @id @default(uuid())
     roomId      String       @unique @map("room_id")
     title       String
+    description String
     createdBy   User         @relation("CreatedBy", fields: [createdById], references: [id])
     createdById String       @map("created_by")
     attendees   User[]       @relation("Attendees")

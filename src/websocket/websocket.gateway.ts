@@ -22,10 +22,10 @@ export class WebsocketGateway {
   @SubscribeMessage('message')
   handleMessage(
     @ConnectedSocket() socket: Socket,
-    @MessageBody() { room, message }) {
+    @MessageBody() { room, message, sender }) {
     console.log(room, message)
     socket.join(room)
-    this.server.to(room).emit('new_message', message);
+    this.server.to(room).emit('new_message', { content: message, sender });
   }
 
   @SubscribeMessage('initiate_stream')
@@ -85,7 +85,7 @@ export class WebsocketGateway {
       }
     })
 
-    this.server.to(payload.room).emit('new_user_joined', `${user.names} has joined the room`);
+    this.server.to(payload.room).emit('new_user_joined', `${user.names} has left the room`);
   }
 
 }

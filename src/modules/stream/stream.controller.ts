@@ -28,7 +28,6 @@ export class StreamController {
     }
 
     @Get('get-streams')
-    @UseGuards(AuthGuard)
     @ApiQuery({ name: "page", required: false, example: 0, type: Number })
     @ApiQuery({ name: "limit", required: false, example: 5, type: Number })
     async getLiveStreams(

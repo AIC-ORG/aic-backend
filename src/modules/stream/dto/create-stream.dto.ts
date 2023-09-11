@@ -9,4 +9,9 @@ export class CreateStreamDTO {
     @ApiProperty()
     title: string
 
+    @IsNotEmpty()
+    @IsString()
+    @ApiProperty()
+    description: string
+
 }
