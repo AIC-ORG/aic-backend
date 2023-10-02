@@ -1,3 +1,4 @@
+/* eslint_disable */
 import { CanActivate, ExecutionContext, Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { PrismaService } from "src/prisma/prisma.service";
@@ -25,5 +26,4 @@ export class AuthGuard implements CanActivate {
             }
         }
     }
-
 }

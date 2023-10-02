@@ -26,7 +26,7 @@ async function bootstrap() {
     .addTag("faqs")
     .addTag("contacts")
     .addTag("health")
-    .setContact("Mugisha Precieux", "https://github.com/mugishap", "precieuxmugisha@gmail.com")
+    .setContact("Mugisha Precieux", "https://github.com/mugishap", "precieuxmugisha@gmail.com" , "Jazzy Bruno" , "https://github.com/jazzybruno" , "jazzybruno45@gmail.com")
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
