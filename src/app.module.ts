@@ -13,7 +13,7 @@ import { WebsocketGateway } from './websocket/websocket.gateway';
 import { StreamModule } from './modules/stream/stream.module';
 import { ArtistModule } from './modules/artist/artist.module';
 import { StoreModule } from './modules/store/store.module';
-import { ChatModule } from './chat/chat.module';
+import { MessageModule } from './message/message.module';
 
 @Module({
   imports: [
@@ -36,7 +36,7 @@ import { ChatModule } from './chat/chat.module';
     StreamModule,
     ContactModule,
     FaqModule,
-    ChatModule
+    MessageModule,
   ]
 })
 export class AppModule { }

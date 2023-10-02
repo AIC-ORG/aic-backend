@@ -1,137 +1,149 @@
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 enum Role {
-    ARTIST
-    ADMIN
-    USER
+  ARTIST
+  ADMIN
+  USER
 
-    @@map("roles")
+  @@map("roles")
 }
 
 enum VerificationStatus {
-    VERIFIED
-    PENDING
-    UNVERIFIED
+  VERIFIED
+  PENDING
+  UNVERIFIED
 
-    @@map("verification_status")
+  @@map("verification_status")
 }
 
 enum PasswordResetStatus {
-    PENDING
-    IDLE
+  PENDING
+  IDLE
 
-    @@map("password_reset_status")
+  @@map("password_reset_status")
 }
 
 enum StreamStatus {
-    LIVE
-    PENDING
-    ENDED
+  LIVE
+  PENDING
+  ENDED
 
-    @@map("stream_status")
+  @@map("stream_status")
 }
 
 model User {
-    id                   String              @id @default(uuid())
-    names                String
-    email                String              @unique
-    telephone            String?
-    password             String
-    profile              String?             @default("https://res.cloudinary.com/djxhcwowp/image/upload/v1623778853/avatars/avatar-1_ozxjxh.png")
-    role                 Role                @default(USER)
-    verificationStatus   VerificationStatus  @default(UNVERIFIED) @map("verification_status")
-    verificationCode     String?
-    verificationExpires  DateTime?
-    passwordResetStatus  PasswordResetStatus @default(IDLE) @map("password_reset_status")
-    passwordResetCode    String?
-    passwordResetExpires DateTime?
-    createdAt            DateTime            @default(now()) @map("created_at")
-    updatedAt            DateTime            @updatedAt @map("updated_at")
-    myStreams            Stream[]            @relation("CreatedBy")
+  id                   String              @id @default(uuid())
+  names                String
+  email                String              @unique
+  telephone            String?
+  password             String
+  profile              String?             @default("https://res.cloudinary.com/djxhcwowp/image/upload/v1623778853/avatars/avatar-1_ozxjxh.png")
+  role                 Role                @default(USER)
+  verificationStatus   VerificationStatus  @default(UNVERIFIED) @map("verification_status")
+  verificationCode     String?
+  verificationExpires  DateTime?
+  passwordResetStatus  PasswordResetStatus @default(IDLE) @map("password_reset_status")
+  passwordResetCode    String?
+  passwordResetExpires DateTime?
+  createdAt            DateTime            @default(now()) @map("created_at")
+  updatedAt            DateTime            @updatedAt @map("updated_at")
+  myStreams            Stream[]            @relation("CreatedBy")
 
-    currentStream Stream? @relation("Attendees", fields: [streamId], references: [id])
-    streamId      String?
+  currentStream Stream? @relation("Attendees", fields: [streamId], references: [id])
+  streamId      String?
 
-    songs  Song[]
-    stores Store[]
+  songs   Song[]
+  stores  Store[]
+  Message Message[]
 
-    @@map("users")
+  @@map("users")
 }
 
 model Song {
-    id          String   @id @default(uuid())
-    title       String
-    artist      User     @relation(fields: [artistId], references: [id])
-    artistId    String   @map("artist_id")
-    url         String
-    description String?
-    createdAt   DateTime @default(now()) @map("created_at")
-    updatedAt   DateTime @updatedAt @map("updated_at")
+  id          String   @id @default(uuid())
+  title       String
+  artist      User     @relation(fields: [artistId], references: [id])
+  artistId    String   @map("artist_id")
+  url         String
+  description String?
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
 }
 
 model Store {
-    id          String    @id @default(uuid())
-    name        String
-    description String?
-    logo        String?
-    artist      User      @relation(fields: [artistId], references: [id])
-    artistId    String    @map("artist_id")
-    createdAt   DateTime  @default(now()) @map("created_at")
-    updatedAt   DateTime  @updatedAt @map("updated_at")
-    products    Product[]
+  id          String    @id @default(uuid())
+  name        String
+  description String?
+  logo        String?
+  artist      User      @relation(fields: [artistId], references: [id])
+  artistId    String    @map("artist_id")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  products    Product[]
 }
 
 model Product {
-    id          String   @id @default(uuid())
-    name        String
-    description String?
-    price       Float
-    image       String
-    store       Store    @relation(fields: [storeId], references: [id])
-    storeId     String   @map("store_id")
-    quantity    Int      @default(1)
-    createdAt   DateTime @default(now()) @map("created_at")
-    updatedAt   DateTime @updatedAt @map("updated_at")
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  price       Float
+  image       String
+  store       Store    @relation(fields: [storeId], references: [id])
+  storeId     String   @map("store_id")
+  quantity    Int      @default(1)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
 }
 
 model Stream {
-    id          String       @id @default(uuid())
-    roomId      String       @unique @map("room_id")
-    title       String
-    description String
-    createdBy   User         @relation("CreatedBy", fields: [createdById], references: [id])
-    createdById String       @map("created_by")
-    attendees   User[]       @relation("Attendees")
-    status      StreamStatus @default(PENDING)
-    createdAt   DateTime     @default(now()) @map("created_at")
-    updatedAt   DateTime     @updatedAt @map("updated_at")
+  id           String       @id @default(uuid())
+  roomId       String       @unique @map("room_id")
+  title        String
+  description  String
+  createdBy    User         @relation("CreatedBy", fields: [createdById], references: [id])
+  createdById  String       @map("created_by")
+  attendees    User[]       @relation("Attendees")
+  status       StreamStatus @default(PENDING)
+  createdAt    DateTime     @default(now()) @map("created_at")
+  updatedAt    DateTime     @updatedAt @map("updated_at")
+  chatMessages Message[]
+}
+
+model Message {
+  id        String   @id @default(uuid())
+  content   String
+  sender    User     @relation(fields: [senderId], references: [id])
+  senderId  String   @map("sender_id")
+  stream    Stream   @relation(fields: [streamId], references: [id])
+  streamId  String   @map("stream_id")
+  createdAt DateTime @default(now()) @map("created_at")
 }
 
 model Contact {
-    id        String   @id @default(uuid())
-    names     String
-    email     String
-    telephone String
-    message   String
-    createdAt DateTime @default(now()) @map("created_at")
-    updatedAt DateTime @updatedAt @map("updated_at")
+  id        String   @id @default(uuid())
+  names     String
+  email     String
+  telephone String
+  message   String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
-    @@map("contacts")
+  @@map("contacts")
 }
 
 model Faq {
-    id        String   @id @default(uuid())
-    question  String
-    answer    String?
-    createdAt DateTime @default(now()) @map("created_at")
-    updatedAt DateTime @updatedAt @map("updated_at")
+  id        String   @id @default(uuid())
+  question  String
+  answer    String?
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
-    @@map("faqs")
+  @@map("faqs")
 }
