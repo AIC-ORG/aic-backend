@@ -1,5 +1,7 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { CreateMessageDto } from './dto/create-message.dto';
+import { connect } from 'http2';
 
 @Injectable()
 export class MessageService {
@@ -7,7 +9,11 @@ export class MessageService {
         private readonly prismaServie : PrismaService
     ){}
 
-   async findAll (streamId : string){
+    async findAll(){
+        return await this.prismaServie.message.findMany()
+    }
+
+   async findAllByStream (streamId : string){
          return await this.prismaServie.message.findMany({
               where : {
                 streamId
@@ -33,6 +39,53 @@ export class MessageService {
             senderId : senderId
         }
     })
+   }
+
+   async createMessage(message : CreateMessageDto){
+    const {streamId  , senderId , content} = message
+     if(!streamId || !senderId || !content){
+        throw new BadRequestException("Please Fill in the required data")
+     }
+    const stream = this.prismaServie.stream.findUnique({
+        where : {
+            id : streamId
+        }
+    })
+    if(!stream){
+        throw new NotFoundException("The Stream was not found")
+    }
+
+    const user = this.prismaServie.user.findUnique({
+        where : {
+            id : senderId
+        }
+    })
+
+    if(!user) {
+        throw new NotFoundException("The User was not Found")
+    }
+
+    let messageCreated = this.prismaServie.message.create({
+       data : {
+        content : content,
+        stream : {
+            connect : {
+                id : streamId
+            }
+        },
+        sender : {
+            connect : {
+                id : senderId
+            }
+        }
+              },
+              include : {
+                stream : true,
+                sender : true
+              }
+    })
+
+    return messageCreated;
    }
 
    async deleteMessage( id : string){
@@ -69,5 +122,5 @@ export class MessageService {
     })
    }
 
-   
+
 }
