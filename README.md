@@ -88,6 +88,7 @@ For Deploymnent and CI/CD you can use Docker to deploy the app on a live system.
 ## ✍️ Authors <a name = "authors"></a>
 
 - [@mugishap](https://github.com/mugishap) - Backend Development
+- [@jazzybruno](https://github.com/jazzybruno) - Backend Development
 
 ## 🎉 Acknowledgements <a name = "acknowledgement"></a>
 
