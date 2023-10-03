@@ -11,6 +11,23 @@ export class StreamService {
 
     async create(artistId: string, dto: CreateStreamDTO) {
 
+    let roomId : string;
+    let isStreamPresent = true;
+    while(isStreamPresent){
+        roomId = Math.floor(100000 + Math.random() * 900000).toString();
+        const streampresent = await this.prisma.stream.findUnique({
+            where :{
+                roomId : roomId
+            }
+        })
+
+        if(streampresent){
+             continue;
+        }else{
+            isStreamPresent = false;
+        }
+    }
+
         const stream = await this.prisma.stream.create({
             data: {
                 roomId: Math.floor(100000 + Math.random() * 900000).toString(),
