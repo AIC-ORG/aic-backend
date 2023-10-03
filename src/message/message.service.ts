@@ -2,14 +2,14 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { connect } from 'http2';
-import { WebSocketGateway } from '@nestjs/websockets';
+import { WebsocketGateway } from 'src/websocket/websocket.gateway';
 
 @Injectable()
 export class MessageService {
 
     constructor(
         private readonly prismaServie : PrismaService,
-        private readonly  WebSocketGateway
+        private readonly websocketGateway : WebsocketGateway
     ){}
 
     async findAll(){
@@ -91,7 +91,17 @@ export class MessageService {
               }
     })
 
-    this.WebSocketGateway.server.to(roomId).emit('new_message', { content: content, sender : (await user).names });
+     this.websocketGateway.sendMessage({
+            roomId : roomId,
+            content : content,
+            sender : {
+                id : (await user).id,
+                names : (await user).names,
+                email : (await user).email,
+                profile : (await user).profile,
+                telephone : (await user).telephone
+            }
+     })
 
     return messageCreated;
    }

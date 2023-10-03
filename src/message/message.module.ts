@@ -4,8 +4,7 @@ import { MessageController } from './message.controller';
 import { WebsocketGateway } from 'src/websocket/websocket.gateway';
 
 @Module({
-  providers: [MessageService],
-  controllers: [MessageController],
-  imports : [WebsocketGateway]
+  providers: [MessageService , WebsocketGateway],
+  controllers: [MessageController]
 })
 export class MessageModule {}
