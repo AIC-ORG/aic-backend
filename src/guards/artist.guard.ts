@@ -15,6 +15,7 @@ export class ArtistGuard implements CanActivate {
             const tokenValue = token.split(" ")[1];
             try {
                 const decodedToken = this.jwtService.verify(tokenValue);
+                console.log(decodedToken)
                 const user = await this.prisma.user.findUnique({ where: { id: decodedToken.id } })
                 if (!user) return false;
                 switch (user.role) {
