@@ -1,9 +1,7 @@
-import { Controller, Get, Req ,  NotFoundException, Param, Post, Query , Body, Delete, UseGuards } from '@nestjs/common';
-import { MessageService } from './message.service';
-import { CreateMessageDto } from './dto/create-message.dto';
-import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
+import { Controller, Delete, Get, NotFoundException, Param, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/guards/auth.guard';
-import { AuthRequest } from 'src/types';
+import { MessageService } from './message.service';
 
 @Controller('message')
 @ApiBearerAuth()
@@ -42,15 +40,6 @@ export class MessageController {
         console.log("The Stream is this one" + streamId);
         console.log("The Sender is this one" + senderId)
         return this.messageService.findAllByStreamAndSender(senderId , streamId);
-    }
-
-    @UseGuards(AuthGuard)
-    @Post('/create')
-    @ApiBody({type : CreateMessageDto})
-    async createMessage(
-        @Req() req : AuthRequest,
-        @Body() message : CreateMessageDto){
-        return this.messageService.createMessage(req.user.id ,  message);
     }
 
     @UseGuards(AuthGuard)

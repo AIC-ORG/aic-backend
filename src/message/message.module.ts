@@ -1,10 +1,11 @@
-import { Module } from '@nestjs/common';
-import { MessageService } from './message.service';
+import { Global, Module } from '@nestjs/common';
 import { MessageController } from './message.controller';
-import { WebsocketGateway } from 'src/websocket/websocket.gateway';
+import { MessageService } from './message.service';
 
+@Global()
 @Module({
-  providers: [MessageService , WebsocketGateway],
-  controllers: [MessageController]
+  providers: [MessageService],
+  controllers: [MessageController],
+  exports: [MessageService]
 })
-export class MessageModule {}
+export class MessageModule { }

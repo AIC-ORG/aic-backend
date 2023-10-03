@@ -1,13 +1,15 @@
 import { ConnectedSocket, MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
-import { User } from '@prisma/client';
 import { Server, Socket } from 'socket.io';
+import { MessageService } from 'src/message/message.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @WebSocketGateway(5002)
 export class WebsocketGateway {
 
   constructor(
-    private prisma: PrismaService
+    private prisma: PrismaService,
+    private messageService: MessageService
+
   ) { }
 
   @WebSocketServer() server: Server;
@@ -24,20 +26,11 @@ export class WebsocketGateway {
   handleMessage(
     @ConnectedSocket() socket: Socket,
     @MessageBody() { room, message, sender }) {
-    console.log(room, message)
+    console.log(room, message, sender)
+    if (!room || !message || !sender) return
     socket.join(room)
-    this.server.to(room).emit('new_message', { content: message, sender });
-  }
-
-  sendMessage(MessageData : {roomId : string , content : string , sender: {
-    id : string,
-    names : string
-    email : string,
-    profile : string ,
-    telephone : string
-  }}){
-    console.log("The Socket has been called");
-    this.server.to(MessageData.roomId).emit('new_message', { content: MessageData.content, sender : MessageData.sender });
+    this.messageService.createMessage({ content: message, senderId: sender, roomId: room })
+    this.server.to(room).emit('new_message', { content: message, sender, room });
   }
 
   @SubscribeMessage('initiate_stream')

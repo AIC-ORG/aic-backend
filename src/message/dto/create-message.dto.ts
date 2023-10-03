@@ -1,15 +1,20 @@
 import { ApiProperty } from "@nestjs/swagger"
 import { IsNotEmpty, IsString } from "class-validator"
 
-export class CreateMessageDto{
+export class CreateMessageDTO {
 
     @IsNotEmpty()
     @IsString()
     @ApiProperty()
-    content : string
+    senderId: string
 
     @IsNotEmpty()
     @IsString()
     @ApiProperty()
-    streamId : string
+    content: string
+
+    @IsNotEmpty()
+    @IsString()
+    @ApiProperty()
+    roomId: string
 }
