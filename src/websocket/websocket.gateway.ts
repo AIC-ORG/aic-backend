@@ -46,11 +46,8 @@ export class WebsocketGateway {
         },
         status: "LIVE"
       },
-
     })
-
     this.server.to(room).emit('stream_started');
-
   }
 
   @SubscribeMessage('join-room')
@@ -87,5 +84,6 @@ export class WebsocketGateway {
 
     this.server.to(payload.room).emit('new_user_joined', `${user.names} has left the room`);
   }
+
 
 }

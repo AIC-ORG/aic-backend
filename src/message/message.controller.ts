@@ -24,7 +24,7 @@ export class MessageController {
     @Get('/id/:id')
     async getOneById(@Param('id') id: string){
         const message = await this.messageService.findOneById(id);
-        if(message){
+        if(!message){
             throw new NotFoundException("The Message was not found")
         }
         return message;
