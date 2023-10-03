@@ -38,6 +38,18 @@ export class UserController {
         return ServerResponse.success("User fetched successfully", { user })
     }
 
+    @Get("all")
+    // @UseGuards(AdminGuard)
+    @ApiQuery({ name: "page", required: false, example: 0 })
+    @ApiQuery({ name: "limit", required: false, example: 5 })
+    async all(
+        @Query("page") page: number = 0,
+        @Query("limit") limit: number = 5,
+    ) {
+        const users = await this.userService.findAll(page, limit);
+        return ServerResponse.success("Users fetched successfully", { users })
+    }
+
     @Get(":id")
     @UseGuards(AuthGuard)
     @ApiParam({ name: "id", required: true })
@@ -51,18 +63,6 @@ export class UserController {
     @ApiParam({ name: "query", required: true })
     async search(@Param("query") query: string) {
         const users = await this.userService.search(query);
-        return ServerResponse.success("Users fetched successfully", { users })
-    }
-
-    @Get("all")
-    // @UseGuards(AdminGuard)
-    @ApiQuery({ name: "page", required: false, example: 0 })
-    @ApiQuery({ name: "limit", required: false, example: 5 })
-    async all(
-        @Query("page") page: number = 0,
-        @Query("limit") limit: number = 5,
-    ) {
-        const users = await this.userService.findAll(page, limit);
         return ServerResponse.success("Users fetched successfully", { users })
     }
 
