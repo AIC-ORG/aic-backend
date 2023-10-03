@@ -4,6 +4,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppExceptionFilter } from './filters/AppExceptionFilter';
 import { configDotenv } from 'dotenv';
 import { ValidationPipe } from '@nestjs/common';
+import { IoAdapter } from '@nestjs/platform-socket.io';
 
 async function bootstrap() {
 
@@ -32,6 +33,8 @@ async function bootstrap() {
 
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('/api/v1/docs', app, document);
+
+  app.useWebSocketAdapter(new IoAdapter(app));
 
   await app.listen(process.env.PORT);
 

@@ -2,11 +2,14 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { connect } from 'http2';
+import { WebSocketGateway } from '@nestjs/websockets';
 
 @Injectable()
 export class MessageService {
+
     constructor(
-        private readonly prismaServie : PrismaService
+        private readonly prismaServie : PrismaService,
+        private readonly  WebSocketGateway
     ){}
 
     async findAll(){
@@ -55,6 +58,8 @@ export class MessageService {
         throw new NotFoundException("The Stream was not found")
     }
 
+    const roomId : string = (await stream).roomId
+
     const user = this.prismaServie.user.findUnique({
         where : {
             id : senderId
@@ -68,6 +73,7 @@ export class MessageService {
     let messageCreated = this.prismaServie.message.create({
        data : {
         content : content,
+        roomId : roomId,
         stream : {
             connect : {
                 id : streamId
@@ -84,6 +90,8 @@ export class MessageService {
                 sender : true
               }
     })
+
+    this.WebSocketGateway.server.to(roomId).emit('new_message', { content: content, sender : (await user).names });
 
     return messageCreated;
    }

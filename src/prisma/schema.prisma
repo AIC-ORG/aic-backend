@@ -120,7 +120,8 @@ model Message {
   id        String   @id @default(uuid())
   content   String
   sender    User     @relation(fields: [senderId], references: [id])
-  senderId  String   @map("sender_id")
+  senderId  String   @map("sender_id")   
+  roomId    String   @map("room_id")
   stream    Stream   @relation(fields: [streamId], references: [id])
   streamId  String   @map("stream_id")
   createdAt DateTime @default(now()) @map("created_at")
