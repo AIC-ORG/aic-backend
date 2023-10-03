@@ -16,18 +16,6 @@ export class MessageService {
         return await this.prismaServie.message.findMany()
     }
 
-   async findAllByStream (streamId : string){
-         return await this.prismaServie.message.findMany({
-              where : {
-                streamId : streamId
-              },
-              include : {
-                sender : true,
-                stream : true
-              }
-         })
-   }
-
    async findOneById(senderId : string){
     return await this.prismaServie.message.findUnique({
         where : {

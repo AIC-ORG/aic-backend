@@ -19,12 +19,6 @@ export class MessageController {
         return this.messageService.findAll();
     }
 
-    @UseGuards(AuthGuard)
-    @Get('/stream/:streamId')
-    async getAllByStream( @Param('streamId') streamId : string){
-      return this.messageService.findAllByStream(streamId)
-    }
-
 
     @UseGuards(AuthGuard)
     @Get('/id/:id')
