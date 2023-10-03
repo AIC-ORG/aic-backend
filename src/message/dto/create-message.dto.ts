@@ -11,10 +11,5 @@ export class CreateMessageDto{
     @IsNotEmpty()
     @IsString()
     @ApiProperty()
-    senderId : string
-
-    @IsNotEmpty()
-    @IsString()
-    @ApiProperty()
     streamId : string
 }

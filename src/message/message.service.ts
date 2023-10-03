@@ -19,10 +19,11 @@ export class MessageService {
    async findAllByStream (streamId : string){
          return await this.prismaServie.message.findMany({
               where : {
-                streamId
+                streamId : streamId
               },
               include : {
-                sender : true
+                sender : true,
+                stream : true
               }
          })
    }
@@ -40,12 +41,24 @@ export class MessageService {
         where : {
             streamId : streamId,
             senderId : senderId
+        },
+        include : {
+            sender : true,
+            stream : true
+          }
+    })
+   }
+
+   async findAllByRoom(roomId : string){
+    return await this.prismaServie.message.findMany({
+        where : {
+            roomId : roomId
         }
     })
    }
 
-   async createMessage(message : CreateMessageDto){
-    const {streamId  , senderId , content} = message
+   async createMessage(senderId : string ,  message : CreateMessageDto){
+    const {streamId  , content} = message
      if(!streamId || !senderId || !content){
         throw new BadRequestException("Please Fill in the required data")
      }

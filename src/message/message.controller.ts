@@ -1,10 +1,12 @@
-import { Controller, Get, NotFoundException, Param, Post, Query , Body, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Req ,  NotFoundException, Param, Post, Query , Body, Delete, UseGuards } from '@nestjs/common';
 import { MessageService } from './message.service';
 import { CreateMessageDto } from './dto/create-message.dto';
-import { ApiBody, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/guards/auth.guard';
+import { AuthRequest } from 'src/types';
 
 @Controller('message')
+@ApiBearerAuth()
 @ApiTags('message')
 export class MessageController {
     constructor(
@@ -35,16 +37,26 @@ export class MessageController {
     }
 
     @UseGuards(AuthGuard)
-    @Get('/stream/sender')
-    async getAllByStreamAndSender(@Query('streamId') streamId : string , @Query('senderId') senderId : string){
+    @Get('/room/:roomId')
+    async getAllByRoom( @Param('roomId') roomId : string){
+      return this.messageService.findAllByRoom(roomId)
+    }
+
+    @UseGuards(AuthGuard)
+    @Get('/stream/:streamId/sender/:senderId')
+    async getAllByStreamAndSender(@Param('streamId') streamId : string , @Param('senderId') senderId : string){
+        console.log("The Stream is this one" + streamId);
+        console.log("The Sender is this one" + senderId)
         return this.messageService.findAllByStreamAndSender(senderId , streamId);
     }
 
     @UseGuards(AuthGuard)
     @Post('/create')
     @ApiBody({type : CreateMessageDto})
-    async createMessage(@Body() message : CreateMessageDto){
-        return this.messageService.createMessage(message);
+    async createMessage(
+        @Req() req : AuthRequest,
+        @Body() message : CreateMessageDto){
+        return this.messageService.createMessage(req.user.id ,  message);
     }
 
     @UseGuards(AuthGuard)
