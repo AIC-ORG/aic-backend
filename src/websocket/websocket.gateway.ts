@@ -27,41 +27,12 @@ export class WebsocketGateway {
     @ConnectedSocket() socket: Socket,
     @MessageBody() { room, message, sender }) {
     console.log(room, message, sender)
-    if (!room || !message || !sender) return
+    if (!room || !message || !sender.id) return
     socket.join(room)
-    this.messageService.createMessage({ content: message, senderId: sender, roomId: room })
+    this.messageService.createMessage({ content: message, senderId: sender.id, roomId: room })
     this.server.to(room).emit('new_message', { content: message, sender, room });
   }
 
-  @SubscribeMessage('initiate_stream')
-  async handleInitiateStream(
-    @ConnectedSocket() socket: Socket,
-    @MessageBody() { room, userId }) {
-    socket.join(room)
-    await this.prisma.stream.update({
-      where:
-      {
-        roomId: room
-      },
-      data: {
-        attendees: {
-          connect: {
-            id: userId
-          }
-        },
-        status: "LIVE"
-      },
-    })
-    this.server.to(room).emit('stream_started');
-  }
-
-  @SubscribeMessage('join-room')
-  async handleJoinRoom(
-    @ConnectedSocket() socket: Socket,
-    @MessageBody() { room, peerId }) {
-    socket.join(room)
-    this.server.to(room).emit('user-connected', peerId);
-  }
 
   @SubscribeMessage('join_chat_room')
   async handleJoinChatRoom(
@@ -90,5 +61,31 @@ export class WebsocketGateway {
     this.server.to(payload.room).emit('new_user_joined', `${user.names} has left the room`);
   }
 
+  // Simple peer and stream handling.
+
+  @SubscribeMessage('call-user')
+  public callUser(client: Socket, data: any) {
+    client.to(data.to).emit('call-made', {
+      offer: data.offer,
+      socket: client.id,
+    });
+  }
+
+  @SubscribeMessage('make-answer')
+  public makeAnswer(client: Socket, data: any) {
+    client.to(data.to).emit('answer-made', {
+      socket: client.id,
+      answer: data.answer,
+    });
+  }
+
+  @SubscribeMessage('join_room')
+  public joinStreamRoom(
+    @ConnectedSocket() socket: Socket,
+    @MessageBody() { roomId, userId, peerId }
+  ) {
+    socket.join(roomId)
+    this.server.to(roomId).emit("", { userId: userId, peerId: peerId })
+  }
 
 }
