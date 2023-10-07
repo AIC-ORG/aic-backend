@@ -78,4 +78,16 @@ export class StreamService {
         })
     }
 
+    async getStreamByRoomId(roomId: string) {
+        return this.prisma.stream.findUnique({
+            where: {
+                roomId: roomId
+            },
+            include: {
+                createdBy: true,
+                attendees: true
+            }
+        })
+    }
+
 }

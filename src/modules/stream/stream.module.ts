@@ -6,6 +6,7 @@ import { WebsocketGateway } from 'src/websocket/websocket.gateway';
 
 @Module({
   controllers: [StreamController],
-  providers: [StreamService, WebsocketGateway]
+  providers: [StreamService, WebsocketGateway],
+  exports : [StreamService]
 })
 export class StreamModule { }
