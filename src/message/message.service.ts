@@ -12,7 +12,11 @@ export class MessageService {
     ) { }
 
     async findAll() {
-        return await this.prismaServie.message.findMany()
+        return await this.prismaServie.message.findMany({
+            include : {
+                sender : true
+            }
+        })
     }
 
     async findOneById(senderId: string) {

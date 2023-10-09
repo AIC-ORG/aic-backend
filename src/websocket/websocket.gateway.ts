@@ -6,7 +6,7 @@ import { StreamService } from 'src/modules/stream/stream.service';
 import { CreateStreamDTO } from 'src/modules/stream/dto/create-stream.dto';
 import { AuthRequest } from 'src/types';
 
-@WebSocketGateway(5002)
+@WebSocketGateway(5002 , {cors : true})
 export class WebsocketGateway {
 
   constructor(
@@ -89,14 +89,16 @@ export class WebsocketGateway {
     @MessageBody() { roomId, userId, peerId }
   ) {
     socket.join(roomId)
-    this.server.to(roomId).emit("", { userId: userId, peerId: peerId })
+    this.server.to(roomId).emit("sending-peer", { userId: userId, peerId: peerId })
+    console.log("The user has joined the room");
+    
   }
 
 @SubscribeMessage('create_stream')
-  async handleCreateStream(client : Socket , dto : CreateStreamDTO , req :  AuthRequest){
-     const artistId  = req.user.id;
+  async handleCreateStream(client : Socket , dto : CreateStreamDTO , artistId : string){
     try {
       const stream = await this.streamService.create(artistId , dto);
+      console.log("The stream has been created ");
       client.emit('stream_created' , stream);
     } catch (error) {
       // throw new BadRequestException(error.message);
@@ -106,7 +108,7 @@ export class WebsocketGateway {
 
   @SubscribeMessage('join_stream')
   async handleJoinStream(client : Socket , roomId : string){
-     try {
+     try { 
       const stream = await this.streamService.getStreamByRoomId(roomId);
       if(stream){
         client.join(roomId);
