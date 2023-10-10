@@ -33,6 +33,7 @@ export class StreamService {
                 roomId: Math.floor(100000 + Math.random() * 900000).toString(),
                 title: dto.title,
                 description:dto.description,
+                scheduledAt: dto.scheduledAt,
                 createdBy: {
                     connect: {
                         id: artistId
@@ -53,6 +54,7 @@ export class StreamService {
         return stream;
 
     }
+
 
     async getLiveStreams(page: number, limit: number) {
         return this.prisma.stream.findMany({
@@ -77,6 +79,7 @@ export class StreamService {
             }
         })
     }
+    
 
     async getStreamByRoomId(roomId: string) {
         return this.prisma.stream.findUnique({

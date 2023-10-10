@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsString } from "class-validator";
+import { IsDate, IsNotEmpty, IsOptional, IsString } from "class-validator";
 
 
 export class CreateStreamDTO {
@@ -13,5 +13,10 @@ export class CreateStreamDTO {
     @IsString()
     @ApiProperty()
     description: string
+
+    @IsOptional()
+    @IsDate()
+    @ApiProperty()
+    scheduledAt : Date
 
 }
