@@ -107,6 +107,7 @@ model Stream {
   roomId       String       @unique @map("room_id")
   title        String
   description  String
+  scheduledAt  DateTime     @default(now()) @map("scheduled_at")
   createdBy    User         @relation("CreatedBy", fields: [createdById], references: [id])
   createdById  String       @map("created_by")
   attendees    User[]       @relation("Attendees")
@@ -120,7 +121,7 @@ model Message {
   id        String   @id @default(uuid())
   content   String
   sender    User     @relation(fields: [senderId], references: [id])
-  senderId  String   @map("sender_id")   
+  senderId  String   @map("sender_id")
   roomId    String   @map("room_id")
   stream    Stream   @relation(fields: [streamId], references: [id])
   streamId  String   @map("stream_id")
