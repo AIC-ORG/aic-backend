@@ -33,7 +33,7 @@ export class StreamService {
                 roomId: Math.floor(100000 + Math.random() * 900000).toString(),
                 title: dto.title,
                 description:dto.description,
-                scheduledAt: dto.scheduledAt,
+                scheduledAt: new Date(dto.scheduledAt),
                 createdBy: {
                     connect: {
                         id: artistId
