@@ -13,7 +13,7 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "prisma:gen": "npx prisma generate --schema src/prisma/schema.prisma",
-    "prisma:migrate": "npx prisma migrate dev --schema=./src/prisma/schema.prisma --name=init",
+    "prisma:migrate": "npx prisma deploy && npx prisma migrate dev --schema=./src/prisma/schema.prisma --name=init",
     "prisma:studio": "npx prisma studio --schema src/prisma/schema.prisma",
     "prisma:all": "yarn prisma:migrate && yarn prisma:gen",
     "gen:all": "chmod +x src/utils/generators/index.sh && src/utils/generators/index.sh",
