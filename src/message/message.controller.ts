@@ -1,7 +1,8 @@
-import { Controller, Delete, Get, NotFoundException, Param, UseGuards } from '@nestjs/common';
+import { Controller, Delete,  Get, NotFoundException, Param, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { MessageService } from './message.service';
+import { CreateMessageDTO } from './dto/create-message.dto';
 
 @Controller('message')
 @ApiBearerAuth()
@@ -41,6 +42,7 @@ export class MessageController {
         console.log("The Sender is this one" + senderId)
         return this.messageService.findAllByStreamAndSender(senderId , streamId);
     }
+
 
     @UseGuards(AuthGuard)
     @Delete('/delete/id/:id')
