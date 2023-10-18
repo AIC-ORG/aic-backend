@@ -28,12 +28,20 @@ export class StreamService {
         }
     }
 
+   let realScheduledAt : Date;
+
+    if(!dto.scheduledAt){
+       realScheduledAt = new Date();
+    }else {
+       realScheduledAt =  new Date(dto.scheduledAt);
+    }
+
         const stream = await this.prisma.stream.create({
             data: {
                 roomId: Math.floor(100000 + Math.random() * 900000).toString(),
                 title: dto.title,
                 description:dto.description,
-                scheduledAt: dto.scheduledAt,
+                scheduledAt: realScheduledAt,
                 createdBy: {
                     connect: {
                         id: artistId
