@@ -18,7 +18,7 @@
     "prisma:all": "yarn prisma:migrate && yarn prisma:gen",
     "gen:all": "chmod +x src/utils/generators/index.sh && src/utils/generators/index.sh",
     "docker:build": "docker build -t bruno/aic .",
-    "docker:run": "docker run -p 5000:5000 bruno/aic",
+    "docker:run": "docker run -p 5800:5000 bruno/aic",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",
